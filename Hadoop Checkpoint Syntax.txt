@@ -1,0 +1,51 @@
+## Hive syntax Checkpoint
+
+1. Create Table if not exist Book(id INT, title STRING, publish 
+	DATE STRING);
+
+2. Load DATA local inpath 'file /checkpoint/books/books.txt' overwrite into table Book;
+
+3. Select * from Book Where id = 2;
+
+4. Create Table if not exist Sales (id INT, buyer STRING, purchaseDate STRING);
+
+5. Select * from  Sales Limit 5;
+
+6. Create Table if not exist book_sale (id INT, title STRING, buyer STRING, purchaseDate STRING);
+
+7. Insert into book_sale (Select * from Book inner join Sales on Book.id = Sales.id);
+
+8. Select * from book_sale Limit 10;
+
+9. Drop table  if exist Book;
+   Drop table if exist Sales;
+   Drop table if exist book_sale;
+
+
+
+## Pig syntax Checkpoint
+
+1. hdfs dfs -put /home/Pig/Pig_Data/artist.json dfs://localhost:9000/pig_data/
+   hdfs dfs -put /home/Pig/Pig_Data/movies.json dfs://localhost:9000/pig_data/
+
+2. artist = LOAD 'hdfs://localhost:9000/pig_data/artist.json' using JsonLoader as (id : int, artist_name : chararray, role : chararray, movieid  : int, 										  description : chararray);
+   movies = LOAD 'hdfs://localhost:9000/pig_data/movies.json' using JsonLoader as (id : int, movie_name : chararray, year : Date, category:chararray, 										                  director : chararray );
+
+3. movies_by_year = ORDER movies BY year;
+   movies_by_year_name = FOREACH movies_by_year generate name, year;
+
+4. american_movies = FILTER movies by category = 'America';
+
+   director_list = FOREACH american_movies generate director;
+
+5. triplets = FOREACH movies generate movieid, id, role;
+
+6. artist_description FOREACH artist generate artist_name, description;
+
+7. movie_group = GROUP BY movieid;
+   
+
+
+   
+
+
